@@ -11,9 +11,12 @@ import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 
-import { useQuery, gql } from "@apollo/client";
-import { Button, Fab } from "@material-ui/core";
+import { useQuery } from "@apollo/client";
+import { Fab } from "@material-ui/core";
 import Loader from "../asses/loader";
+import { GET_USERS_QUERY } from "../queries/queries";
+import AddUser from "./AddUser";
+import AddCard from "./Card";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,22 +36,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GET_USERS_QUERY = gql`
-  query users {
-    users {
-      id
-      name
-      email
-    }
-  }
-`;
-
 const UserList = () => {
   const { loading, error, data } = useQuery(GET_USERS_QUERY);
   const [checked, setChecked] = React.useState([]);
+  const [addCard, setAddCard] = React.useState(false);
   const classes = useStyles();
   console.log(data);
-  if (loading) return <div className='loader'> <Loader /></div>;
+  if (loading)
+    return (
+      <div className="loader">
+        <Loader />
+      </div>
+    );
   if (error) return <p>Error :(</p>;
 
   const handleToggle = (value) => () => {
@@ -75,23 +74,23 @@ const UserList = () => {
         >
           <AddIcon />
         </Fab>
-        {/* <IconButton edge="end" aria-label="delete">
-          <Icon className={classes.icon} color="secondary">
-            add_circle
-          </Icon>
-        </IconButton> */}
       </div>
-      {[0, 1, 2, 3].map((value) => {
-        const labelId = `checkbox-list-secondary-label-${value}`;
+
+      <AddCard />
+      {data.users.map((users) => {
+        const labelId = `checkbox-list-secondary-label-${users.id}`;
         return (
-          <ListItem className={classes.userList} key={value} button>
+          <ListItem className={classes.userList} key={users.id} button>
             <ListItemAvatar>
               <Avatar
-                alt={`Avatar n°${value + 1}`}
-                src={`/static/images/avatar/${value + 1}.jpg`}
+                alt={`Avatar n°${users.id}`}
+                src={`/static/images/avatar/.jpg`}
               />
             </ListItemAvatar>
-            <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+            <ListItemText id={labelId}>
+              <span> Name: {users.name} </span>{" "}
+              <span className="email"> Email: {users.email} </span>
+            </ListItemText>
             <ListItemSecondaryAction>
               <Fab color="secondary" size="small" aria-label="edit">
                 <EditIcon />
