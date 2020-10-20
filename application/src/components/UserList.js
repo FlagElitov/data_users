@@ -10,13 +10,19 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
+import { Button, Fab } from "@material-ui/core";
 
-import { useQuery } from "@apollo/client";
-import { Fab } from "@material-ui/core";
+import { useQuery, useMutation } from "@apollo/client";
 import Loader from "../asses/loader";
-import { GET_USERS_QUERY } from "../queries/queries";
+import {
+  GET_USERS_QUERY,
+  GET_USER_QUERY,
+  CREATE_USER_MUTATION,
+  UPDATE_USER_MUTATION,
+  DELETE_USER_MUTATION,
+} from "../queries/queries";
 import AddUser from "./AddUser";
-import AddCard from "./Card";
+import UpdateUser from "./UpdateUser";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 1170,
     marginTop: 10,
     backgroundColor: theme.palette.background.paper,
+    position: "relative",
   },
   button: {
     margin: theme.spacing(1),
@@ -37,11 +44,47 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UserList = () => {
+  const [addUser, setAddUser] = React.useState(false);
+  const [updateUser, setUpdateUser] = React.useState(false);
+  const [id, setId] = React.useState("");
+  const [updateName, setUpdateName] = React.useState("");
+  const [updateEmail, setUpdateEmail] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+
   const { loading, error, data } = useQuery(GET_USERS_QUERY);
-  const [checked, setChecked] = React.useState([]);
-  const [addCard, setAddCard] = React.useState(false);
+  const [deleteUser] = useMutation(DELETE_USER_MUTATION, {
+    variables: { id },
+    refetchQueries: () => [{ query: GET_USERS_QUERY }],
+  });
+
+  const [createUser] = useMutation(CREATE_USER_MUTATION, {
+    variables: { name, email },
+    refetchQueries: () => [{ query: GET_USERS_QUERY }],
+  });
+
+  const handleToggleId = (e) => {
+    console.log(e);
+    deleteUser();
+    setId("");
+  };
+
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+  const handleClick = (e) => {
+    e.preventDefault();
+    createUser();
+    setName("");
+    setEmail("");
+    setAddUser(false);
+  };
+
   const classes = useStyles();
-  console.log(data);
   if (loading)
     return (
       <div className="loader">
@@ -50,23 +93,16 @@ const UserList = () => {
     );
   if (error) return <p>Error :(</p>;
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
+  const handleToggleUser = () => {
+    setAddUser(!addUser);
   };
+  console.log(data);
 
   return (
     <List dense className={classes.root}>
       <div className="center">
         <Fab
+          onClick={handleToggleUser}
           size="medium"
           color="secondary"
           aria-label="add"
@@ -76,28 +112,48 @@ const UserList = () => {
         </Fab>
       </div>
 
-      <AddCard />
+      {addUser && (
+        <AddUser
+          handleNameChange={handleNameChange}
+          handleEmailChange={handleEmailChange}
+          handleClick={handleClick}
+          name={name}
+          email={email}
+        />
+      )}
+      {updateUser && <UpdateUser />}
       {data.users.map((users) => {
-        const labelId = `checkbox-list-secondary-label-${users.id}`;
+        const labelId = `${users.id}`;
         return (
-          <ListItem className={classes.userList} key={users.id} button>
+          <ListItem
+            className={classes.userList}
+            key={users.id}
+            data-id={users.id}
+            button
+          >
             <ListItemAvatar>
               <Avatar
                 alt={`Avatar n°${users.id}`}
-                src={`/static/images/avatar/.jpg`}
+                src={`https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png`}
               />
             </ListItemAvatar>
             <ListItemText id={labelId}>
               <span> Name: {users.name} </span>{" "}
               <span className="email"> Email: {users.email} </span>
             </ListItemText>
-            <ListItemSecondaryAction>
+            <ListItemSecondaryAction data-id={users.id}>
               <Fab color="secondary" size="small" aria-label="edit">
                 <EditIcon />
               </Fab>
-              <IconButton edge="end" aria-label="delete">
-                <DeleteIcon />
-              </IconButton>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleToggleId}
+                className={classes.button}
+                startIcon={<DeleteIcon />}
+              >
+                Delete
+              </Button>
             </ListItemSecondaryAction>
           </ListItem>
         );
@@ -107,23 +163,3 @@ const UserList = () => {
 };
 
 export default UserList;
-
-// import React from "react";
-// import { gql } from "apollo-boost";
-// import { graphql } from "apollo-boost";
-
-// const getUsersQuery = gql`
-//   query users {
-//     users {
-//       id
-//       name
-//       email
-//     }
-//   }
-// `;
-
-// const UserList = (props) => {
-//   return <h1>dfs</h1>;
-// };
-
-// export default UserList;

@@ -1,7 +1,21 @@
-const { ApolloError } = require("apollo-server");
+const Joi = require("@hapi/joi");
+const { ApolloError, UserInputError } = require("apollo-server");
 
 module.exports = async (_, { id, input }, { models }) => {
   try {
+    const schema = Joi.object({
+      name: Joi.string().alphanum().min(3).max(30).required(),
+      email: Joi.string().required(),
+    });
+    const { value, error } = schema.validate(input, { abortEarly: false });
+    if (error) {
+      throw new UserInputError(
+        "Failed to create a character due to validator error",
+        {
+          validationErrrors: error.details,
+        }
+      );
+    }
     const userToUpdate = await models.User.findOne({ _id: id });
 
     if (!userToUpdate)

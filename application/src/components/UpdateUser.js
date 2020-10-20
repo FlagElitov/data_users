@@ -17,7 +17,10 @@ const useStyles = makeStyles({
     maxWidth: 345,
     textAlign: "center",
     margin: "auto",
-    marginTop: 50,
+    marginTop: 40,
+    position: "absolute",
+    zIndex: 1,
+    left: 410,
   },
   media: {
     height: 140,
@@ -27,7 +30,13 @@ const useStyles = makeStyles({
   },
 });
 
-export default function AddCard() {
+const AddUser = ({
+  handleNameChange,
+  handleEmailChange,
+  handleClick,
+  name,
+  email,
+}) => {
   const classes = useStyles();
 
   return (
@@ -40,15 +49,25 @@ export default function AddCard() {
         />
         <CardContent>
           <FormControl>
-            <InputLabel htmlFor="my-input">Your name</InputLabel>
-            <Input id="my-input" aria-describedby="my-helper-text" />
+            <InputLabel htmlFor="my-input">Update your name</InputLabel>
+            <Input
+              value={name}
+              onChange={handleNameChange}
+              id="my-input"
+              aria-describedby="my-helper-text"
+            />
             <FormHelperText id="my-helper-text">
               We'll never share your name.
             </FormHelperText>
           </FormControl>
           <FormControl>
-            <InputLabel htmlFor="my-input">Email address</InputLabel>
-            <Input id="my-input" aria-describedby="my-helper-text" />
+            <InputLabel htmlFor="my-input">Update email address</InputLabel>
+            <Input
+              value={email}
+              onChange={handleEmailChange}
+              id="my-input"
+              aria-describedby="my-helper-text"
+            />
             <FormHelperText id="my-helper-text">
               We'll never share your email.
             </FormHelperText>
@@ -56,6 +75,7 @@ export default function AddCard() {
         </CardContent>
         <Button
           className={classes.marginBottom}
+          onClick={handleClick}
           variant="contained"
           color="secondary"
         >
@@ -64,4 +84,6 @@ export default function AddCard() {
       </CardActionArea>
     </Card>
   );
-}
+};
+
+export default AddUser;

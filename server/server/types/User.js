@@ -19,15 +19,15 @@ module.exports = gql`
   }
 
   input CreateUserInput {
-    email: String!
     name: String!
+    email: String!
   }
 
   input UpdateUserInput {
     email: String
     name: String
   }
-  type DeleteUserInput {
+  input DeleteUserInput {
     id: ID!
   }
 `;
