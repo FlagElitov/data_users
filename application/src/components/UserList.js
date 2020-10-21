@@ -46,28 +46,30 @@ const useStyles = makeStyles((theme) => ({
 const UserList = () => {
   const [addUser, setAddUser] = React.useState(false);
   const [updateUser, setUpdateUser] = React.useState(false);
-  const [id, setId] = React.useState("");
   const [updateName, setUpdateName] = React.useState("");
   const [updateEmail, setUpdateEmail] = React.useState("");
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
 
   const { loading, error, data } = useQuery(GET_USERS_QUERY);
-  const [deleteUser] = useMutation(DELETE_USER_MUTATION, {
-    variables: { id },
-    refetchQueries: () => [{ query: GET_USERS_QUERY }],
-  });
+  const [deleteUser] = useMutation(DELETE_USER_MUTATION);
 
   const [createUser] = useMutation(CREATE_USER_MUTATION, {
     variables: { name, email },
     refetchQueries: () => [{ query: GET_USERS_QUERY }],
   });
 
-  const handleToggleId = (e) => {
-    console.log(e);
-    deleteUser();
-    setId("");
+  const handleToggleId = (event, id) => {
+    event.preventDefault();
+    deleteUser({
+      variables: { id },
+      refetchQueries: () => [{ query: GET_USERS_QUERY }],
+    });
   };
+  // const handelDelete = (event, id) => {
+  //   EventSource.preventDefault();
+  //   deleteUser(id);
+  // };
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -138,8 +140,12 @@ const UserList = () => {
               />
             </ListItemAvatar>
             <ListItemText id={labelId}>
-              <span> Name: {users.name} </span>{" "}
-              <span className="email"> Email: {users.email} </span>
+              <span>
+                Name: <span className="email">{users.name} </span>
+              </span>
+              <span>
+                Email: <span className="email">{users.email}</span>
+              </span>
             </ListItemText>
             <ListItemSecondaryAction data-id={users.id}>
               <Fab color="secondary" size="small" aria-label="edit">
@@ -148,7 +154,7 @@ const UserList = () => {
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={handleToggleId}
+                onClick={(event) => handleToggleId(event, users.id)}
                 className={classes.button}
                 startIcon={<DeleteIcon />}
               >

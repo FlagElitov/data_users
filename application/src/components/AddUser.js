@@ -73,15 +73,15 @@ const AddUser = ({
             </FormHelperText>
           </FormControl>
         </CardContent>
-        <Button
-          className={classes.marginBottom}
-          onClick={handleClick}
-          variant="contained"
-          color="secondary"
-        >
-          To create
-        </Button>
       </CardActionArea>
+      <Button
+        className={classes.marginBottom}
+        onClick={handleClick}
+        variant="contained"
+        color="secondary"
+      >
+        To create
+      </Button>
     </Card>
   );
 };
