@@ -36,6 +36,8 @@ const AddUser = ({
   handleClick,
   name,
   email,
+  id,
+  handleClickUpdate,
 }) => {
   const classes = useStyles();
 
@@ -76,11 +78,11 @@ const AddUser = ({
       </CardActionArea>
       <Button
         className={classes.marginBottom}
-        onClick={handleClick}
+        onClick={!id ? handleClick : handleClickUpdate}
         variant="contained"
         color="secondary"
       >
-        To create
+        {!id ? " To create" : "To update"}
       </Button>
     </Card>
   );

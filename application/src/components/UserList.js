@@ -13,7 +13,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import { Button, Fab } from "@material-ui/core";
 
 import { useQuery, useMutation } from "@apollo/client";
-import Loader from "../asses/loader";
+import Loader from "../assest/loader";
 import {
   GET_USERS_QUERY,
   GET_USER_QUERY,
@@ -45,31 +45,35 @@ const useStyles = makeStyles((theme) => ({
 
 const UserList = () => {
   const [addUser, setAddUser] = React.useState(false);
-  const [updateUser, setUpdateUser] = React.useState(false);
-  const [updateName, setUpdateName] = React.useState("");
-  const [updateEmail, setUpdateEmail] = React.useState("");
+  const [id, setId] = React.useState("");
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
 
   const { loading, error, data } = useQuery(GET_USERS_QUERY);
   const [deleteUser] = useMutation(DELETE_USER_MUTATION);
-
+  const [updateUser] = useMutation(UPDATE_USER_MUTATION, {
+    variables: { id, name, email },
+    refetchQueries: () => [{ query: GET_USERS_QUERY }],
+  });
   const [createUser] = useMutation(CREATE_USER_MUTATION, {
     variables: { name, email },
     refetchQueries: () => [{ query: GET_USERS_QUERY }],
   });
 
-  const handleToggleId = (event, id) => {
+  const handleToggleIdDelete = (event, id) => {
     event.preventDefault();
     deleteUser({
       variables: { id },
       refetchQueries: () => [{ query: GET_USERS_QUERY }],
     });
   };
-  // const handelDelete = (event, id) => {
-  //   EventSource.preventDefault();
-  //   deleteUser(id);
-  // };
+  const handleToggleIdUpdate = (event, id, name, email) => {
+    event.preventDefault();
+    setId(id);
+    setName(name);
+    setEmail(email);
+    setAddUser(!addUser);
+  };
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -78,12 +82,23 @@ const UserList = () => {
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
-  const handleClick = (e) => {
-    e.preventDefault();
+
+  const handleClick = () => {
     createUser();
     setName("");
     setEmail("");
     setAddUser(false);
+  };
+  const handleClickUpdate = (e) => {
+    e.preventDefault();
+    updateUser();
+    setName("");
+    setEmail("");
+    setId("");
+    setAddUser(false);
+  };
+  const handleToggleUser = () => {
+    setAddUser(!addUser);
   };
 
   const classes = useStyles();
@@ -94,11 +109,6 @@ const UserList = () => {
       </div>
     );
   if (error) return <p>Error :(</p>;
-
-  const handleToggleUser = () => {
-    setAddUser(!addUser);
-  };
-  console.log(data);
 
   return (
     <List dense className={classes.root}>
@@ -119,11 +129,12 @@ const UserList = () => {
           handleNameChange={handleNameChange}
           handleEmailChange={handleEmailChange}
           handleClick={handleClick}
+          id={id}
           name={name}
           email={email}
+          handleClickUpdate={handleClickUpdate}
         />
       )}
-      {updateUser && <UpdateUser />}
       {data.users.map((users) => {
         const labelId = `${users.id}`;
         return (
@@ -148,13 +159,20 @@ const UserList = () => {
               </span>
             </ListItemText>
             <ListItemSecondaryAction data-id={users.id}>
-              <Fab color="secondary" size="small" aria-label="edit">
+              <Fab
+                onClick={(event) =>
+                  handleToggleIdUpdate(event, users.id, users.name, users.email)
+                }
+                color="secondary"
+                size="small"
+                aria-label="edit"
+              >
                 <EditIcon />
               </Fab>
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={(event) => handleToggleId(event, users.id)}
+                onClick={(event) => handleToggleIdDelete(event, users.id)}
                 className={classes.button}
                 startIcon={<DeleteIcon />}
               >
