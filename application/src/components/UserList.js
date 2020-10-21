@@ -7,7 +7,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import DeleteIcon from "@material-ui/icons/Delete";
-import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import { Button, Fab } from "@material-ui/core";
@@ -22,7 +21,7 @@ import {
   DELETE_USER_MUTATION,
 } from "../queries/queries";
 import AddUser from "./AddUser";
-import UpdateUser from "./UpdateUser";
+import isEmail from "validator/lib/isEmail";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,8 +47,10 @@ const UserList = () => {
   const [id, setId] = React.useState("");
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [validateEmail, setValidateEmail] = React.useState(false);
 
   const { loading, error, data } = useQuery(GET_USERS_QUERY);
+  const { loadingUser, errorUser, dataUser } = useQuery(GET_USER_QUERY);
   const [deleteUser] = useMutation(DELETE_USER_MUTATION);
   const [updateUser] = useMutation(UPDATE_USER_MUTATION, {
     variables: { id, name, email },
@@ -81,6 +82,7 @@ const UserList = () => {
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
+    setValidateEmail(isEmail(email));
   };
 
   const handleClick = () => {
@@ -97,7 +99,11 @@ const UserList = () => {
     setId("");
     setAddUser(false);
   };
+
   const handleToggleUser = () => {
+    setName("");
+    setEmail("");
+    setId("");
     setAddUser(!addUser);
   };
 
@@ -129,6 +135,7 @@ const UserList = () => {
           handleNameChange={handleNameChange}
           handleEmailChange={handleEmailChange}
           handleClick={handleClick}
+          validateEmail={validateEmail}
           id={id}
           name={name}
           email={email}
@@ -151,18 +158,23 @@ const UserList = () => {
               />
             </ListItemAvatar>
             <ListItemText id={labelId}>
-              <span>
+              <span className="width">
                 Name: <span className="email">{users.name} </span>
               </span>
-              <span>
+              <span className="width">
                 Email: <span className="email">{users.email}</span>
               </span>
             </ListItemText>
             <ListItemSecondaryAction data-id={users.id}>
               <Fab
-                onClick={(event) =>
-                  handleToggleIdUpdate(event, users.id, users.name, users.email)
-                }
+                onClick={(event) => {
+                  handleToggleIdUpdate(
+                    event,
+                    users.id,
+                    users.name,
+                    users.email
+                  );
+                }}
                 color="secondary"
                 size="small"
                 aria-label="edit"

@@ -11,7 +11,6 @@ import {
   Input,
   InputLabel,
 } from "@material-ui/core";
-
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
@@ -34,6 +33,7 @@ const AddUser = ({
   handleNameChange,
   handleEmailChange,
   handleClick,
+  validateEmail,
   name,
   email,
   id,
@@ -64,6 +64,7 @@ const AddUser = ({
           </FormControl>
           <FormControl>
             <InputLabel htmlFor="my-input">Email address</InputLabel>
+
             <Input
               value={email}
               onChange={handleEmailChange}
@@ -71,7 +72,11 @@ const AddUser = ({
               aria-describedby="my-helper-text"
             />
             <FormHelperText id="my-helper-text">
-              We'll never share your email.
+              {!validateEmail ? (
+                <span className="error">Validate Email </span>
+              ) : (
+                "Success your email."
+              )}
             </FormHelperText>
           </FormControl>
         </CardContent>
@@ -79,6 +84,7 @@ const AddUser = ({
       <Button
         className={classes.marginBottom}
         onClick={!id ? handleClick : handleClickUpdate}
+        disabled={!validateEmail}
         variant="contained"
         color="secondary"
       >
