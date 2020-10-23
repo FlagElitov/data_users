@@ -16,7 +16,6 @@ const LimitUsers = ({ skip, limit, setSkip, setLimit }) => {
   const classes = useStyles();
   const [value, setValue] = React.useState([skip, limit]);
 
-  console.log(value);
   const handleChange = (event, newValue) => {
     event.preventDefault();
     setValue(newValue);
@@ -37,7 +36,6 @@ const LimitUsers = ({ skip, limit, setSkip, setLimit }) => {
           value={value}
           onChange={handleChange}
           valueLabelDisplay="auto"
-          max="50"
           aria-labelledby="range-slider"
         />
       </div>
