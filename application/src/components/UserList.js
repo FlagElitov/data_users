@@ -22,6 +22,7 @@ import {
 } from "../queries/queries";
 import AddUser from "./AddUser";
 import isEmail from "validator/lib/isEmail";
+import LimitUsers from "./LimitUsers";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,13 +45,18 @@ const useStyles = makeStyles((theme) => ({
 
 const UserList = () => {
   const [addUser, setAddUser] = React.useState(false);
+  const [validateEmail, setValidateEmail] = React.useState(false);
   const [id, setId] = React.useState("");
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [validateEmail, setValidateEmail] = React.useState(false);
+  const [skip, setSkip] = React.useState(0);
+  const [limit, setLimit] = React.useState(10);
 
-  const { loading, error, data } = useQuery(GET_USERS_QUERY);
-  const { loadingUser, errorUser, dataUser } = useQuery(GET_USER_QUERY);
+  const { loading, error, data } = useQuery(GET_USERS_QUERY, {
+    variables: { skip, limit },
+    refetchQueries: () => [{ query: GET_USERS_QUERY }],
+  });
+  const { loadingUser, errorUser, dataUsers } = useQuery(GET_USER_QUERY);
   const [deleteUser] = useMutation(DELETE_USER_MUTATION);
   const [updateUser] = useMutation(UPDATE_USER_MUTATION, {
     variables: { id, name, email },
@@ -74,6 +80,7 @@ const UserList = () => {
     setName(name);
     setEmail(email);
     setAddUser(!addUser);
+    setValidateEmail(isEmail(email));
   };
 
   const handleNameChange = (e) => {
@@ -98,6 +105,7 @@ const UserList = () => {
     setEmail("");
     setId("");
     setAddUser(false);
+    setValidateEmail(false);
   };
 
   const handleToggleUser = () => {
@@ -119,6 +127,12 @@ const UserList = () => {
   return (
     <List dense className={classes.root}>
       <div className="center">
+        <LimitUsers
+          skip={skip}
+          limit={limit}
+          setSkip={setSkip}
+          setLimit={setLimit}
+        />
         <Fab
           onClick={handleToggleUser}
           size="medium"

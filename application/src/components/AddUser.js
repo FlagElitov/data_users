@@ -75,7 +75,7 @@ const AddUser = ({
               {!validateEmail ? (
                 <span className="error">Validate Email </span>
               ) : (
-                "Success your email."
+                <span className="succes"> Success your email</span>
               )}
             </FormHelperText>
           </FormControl>
