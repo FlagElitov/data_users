@@ -56,7 +56,10 @@ const UserList = () => {
     variables: { skip, limit },
     refetchQueries: () => [{ query: GET_USERS_QUERY }],
   });
-  const { loadingUser, errorUser, dataUsers } = useQuery(GET_USER_QUERY);
+  const {} = useQuery(GET_USER_QUERY, {
+    variables: { id },
+    refetchQueries: () => [{ query: GET_USERS_QUERY }],
+  });
   const [deleteUser] = useMutation(DELETE_USER_MUTATION);
   const [updateUser] = useMutation(UPDATE_USER_MUTATION, {
     variables: { id, name, email },
