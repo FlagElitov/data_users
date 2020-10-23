@@ -5,14 +5,14 @@ import AddIcon from "@material-ui/icons/Add";
 import { Fab } from "@material-ui/core";
 
 import { useQuery, useMutation } from "@apollo/client";
-import Loader from "../assest/loader";
+import Loader from "../../assest/loader";
 import {
   GET_USERS_QUERY,
   GET_USER_QUERY,
   CREATE_USER_MUTATION,
   UPDATE_USER_MUTATION,
   DELETE_USER_MUTATION,
-} from "../queries/queries";
+} from "../../queries/queries";
 import AddUser from "./AddUser";
 import isEmail from "validator/lib/isEmail";
 import LimitUsers from "./LimitUsers";
