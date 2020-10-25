@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.scss";
-import MenuBar from "./components/MenuBar";
-import UserList from "./components/UserList";
+import MenuBar from "./components/UserList/MenuBar";
+import UserList from "./components/UserList/UserList";
 
 const App = () => {
   return (

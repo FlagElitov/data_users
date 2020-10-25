@@ -21,7 +21,7 @@ const Users = ({
   users,
   handleToggleIdUpdate,
   handleToggleIdDelete,
-  labelId,
+  
 }) => {
   const classes = useStyles();
   return (
