@@ -8,6 +8,17 @@ import EditIcon from "@material-ui/icons/Edit";
 import { Button, Fab, makeStyles } from "@material-ui/core";
 import React from "react";
 
+interface UsersProps {
+  users: any;
+  handleToggleIdUpdate: (
+    event: React.MouseEvent,
+    id: string,
+    name: string,
+    email: string
+  ) => void;
+  handleToggleIdDelete: (event: React.MouseEvent, id: string) => void;
+}
+
 const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
@@ -17,11 +28,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Users = ({
+const Users: React.FC<UsersProps> = ({
   users,
   handleToggleIdUpdate,
   handleToggleIdDelete,
-  
 }) => {
   const classes = useStyles();
   return (
