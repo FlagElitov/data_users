@@ -4,6 +4,13 @@ import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
 import { Button } from "@material-ui/core";
 
+interface LimitUsersProps {
+  skip: number;
+  limit: number;
+  setSkip: (value: number) => void;
+  setLimit: (value: number) => void;
+}
+
 const useStyles = makeStyles({
   root: {
     width: 250,
@@ -12,15 +19,25 @@ const useStyles = makeStyles({
   },
 });
 
-const LimitUsers = ({ skip, limit, setSkip, setLimit }) => {
+const LimitUsers: React.FC<LimitUsersProps> = ({
+  skip,
+  limit,
+  setSkip,
+  setLimit,
+}) => {
   const classes = useStyles();
-  const [value, setValue] = React.useState([skip, limit]);
+  const [value, setValue] = React.useState<number[]>([skip, limit]);
 
-  const handleChange = (event, newValue) => {
+  // const handleChange = (event:,newValue:) => {
+  //
+  //   setValue(newValue);
+  // };
+
+  const handleChange = (event: any, newValue: number | number[]) => {
     event.preventDefault();
-    setValue(newValue);
+    setValue(newValue as number[]);
   };
-  const handleChangePress = (event) => {
+  const handleChangePress = (event: React.MouseEvent) => {
     event.preventDefault();
     setSkip(value[0]);
     setLimit(value[1]);

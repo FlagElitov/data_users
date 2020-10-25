@@ -37,7 +37,7 @@ const MenuBar = () => {
         <Typography variant="h6" className={classes.title}>
           Data User
         </Typography>
-        <Button color="inherit">Login</Button>
+        <Button color="inherit">Smile</Button>
       </Toolbar>
     </AppBar>
   );

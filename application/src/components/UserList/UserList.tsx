@@ -37,18 +37,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserList = () => {
-  const [addUser, setAddUser] = React.useState(false);
-  const [validateEmail, setValidateEmail] = React.useState(false);
-  const [id, setId] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [skip, setSkip] = React.useState(0);
-  const [limit, setLimit] = React.useState(10);
+const UserList: React.FC = () => {
+  const [addUser, setAddUser] = React.useState<boolean>(false);
+  const [validateEmail, setValidateEmail] = React.useState<boolean>(false);
+  const [id, setId] = React.useState<string>("");
+  const [name, setName] = React.useState<string>("");
+  const [email, setEmail] = React.useState<string>("");
+  const [skip, setSkip] = React.useState<number>(0);
+  const [limit, setLimit] = React.useState<number>(10);
 
   const { loading, error, data } = useQuery(GET_USERS_QUERY, {
     variables: { skip, limit },
-    refetchQueries: [{ query: GET_USERS_QUERY }],
+    query: GET_USERS_QUERY,
   });
   // const {} = useQuery(GET_USER_QUERY, {
   //   variables: { id },
@@ -64,14 +64,19 @@ const UserList = () => {
     refetchQueries: [{ query: GET_USERS_QUERY }],
   });
 
-  const handleToggleIdDelete = (event, id) => {
+  const handleToggleIdDelete = (event: React.MouseEvent, id: string) => {
     event.preventDefault();
     deleteUser({
       variables: { id },
       refetchQueries: [{ query: GET_USERS_QUERY }],
     });
   };
-  const handleToggleIdUpdate = (event, id, name, email) => {
+  const handleToggleIdUpdate = (
+    event: React.MouseEvent,
+    id: string,
+    name: string,
+    email: string
+  ) => {
     event.preventDefault();
     setId(id);
     setName(name);
@@ -80,11 +85,11 @@ const UserList = () => {
     setValidateEmail(isEmail(email));
   };
 
-  const handleNameChange = (e) => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
 
-  const handleEmailChange = (e) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setValidateEmail(isEmail(email));
   };
@@ -95,8 +100,7 @@ const UserList = () => {
     setEmail("");
     setAddUser(false);
   };
-  const handleClickUpdate = (e) => {
-    e.preventDefault();
+  const handleClickUpdate = () => {
     updateUser();
     setName("");
     setEmail("");
@@ -135,7 +139,6 @@ const UserList = () => {
           size="medium"
           color="secondary"
           aria-label="add"
-          className={classes.margin}
         >
           <AddIcon />
         </Fab>
@@ -153,7 +156,7 @@ const UserList = () => {
           handleClickUpdate={handleClickUpdate}
         />
       )}
-      {data.users.map((users) => {
+      {data.users.map((users: any) => {
         const labelId = `${users.id}`;
         return (
           <Users
@@ -162,53 +165,6 @@ const UserList = () => {
             handleToggleIdUpdate={handleToggleIdUpdate}
             handleToggleIdDelete={handleToggleIdDelete}
           />
-          // <ListItem
-          //   className={classes.userList}
-          //   key={users.id}
-          //   data-id={users.id}
-          //   button
-          // >
-          //   <ListItemAvatar>
-          //     <Avatar
-          //       alt={`Avatar n°${users.id}`}
-          //       src={`https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png`}
-          //     />
-          //   </ListItemAvatar>
-          //   <ListItemText id={labelId}>
-          //     <span className="width">
-          //       Name: <span className="email">{users.name} </span>
-          //     </span>
-          //     <span className="width">
-          //       Email: <span className="email">{users.email}</span>
-          //     </span>
-          //   </ListItemText>
-          //   <ListItemSecondaryAction data-id={users.id}>
-          //     <Fab
-          //       onClick={(event) => {
-          //         handleToggleIdUpdate(
-          //           event,
-          //           users.id,
-          //           users.name,
-          //           users.email
-          //         );
-          //       }}
-          //       color="secondary"
-          //       size="small"
-          //       aria-label="edit"
-          //     >
-          //       <EditIcon />
-          //     </Fab>
-          //     <Button
-          //       variant="contained"
-          //       color="secondary"
-          //       onClick={(event) => handleToggleIdDelete(event, users.id)}
-          //       className={classes.button}
-          //       startIcon={<DeleteIcon />}
-          //     >
-          //       Delete
-          //     </Button>
-          //   </ListItemSecondaryAction>
-          // </ListItem>
         );
       })}
     </List>

@@ -11,6 +11,17 @@ import {
   Input,
   InputLabel,
 } from "@material-ui/core";
+
+interface AddUserProps {
+  handleNameChange: (e: any) => void;
+  handleEmailChange: (e: any) => void;
+  handleClick: () => void;
+  validateEmail: boolean;
+  name: string;
+  email: string;
+  id: string;
+  handleClickUpdate: () => void;
+}
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
@@ -29,7 +40,7 @@ const useStyles = makeStyles({
   },
 });
 
-const AddUser = ({
+const AddUser: React.FC<AddUserProps> = ({
   handleNameChange,
   handleEmailChange,
   handleClick,
