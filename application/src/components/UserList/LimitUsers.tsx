@@ -28,8 +28,14 @@ const LimitUsers: React.FC<LimitUsersProps> = ({
   const classes = useStyles();
   const [value, setValue] = React.useState<number[]>([skip, limit]);
 
-  const handleChange = (newValue: () => void) => {
-    setValue(newValue);
+  // const handleChange = (event:,newValue:) => {
+  //
+  //   setValue(newValue);
+  // };
+
+  const handleChange = (event: any, newValue: number | number[]) => {
+    event.preventDefault();
+    setValue(newValue as number[]);
   };
   const handleChangePress = (event: React.MouseEvent) => {
     event.preventDefault();

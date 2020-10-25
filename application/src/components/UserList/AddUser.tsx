@@ -13,14 +13,14 @@ import {
 } from "@material-ui/core";
 
 interface AddUserProps {
-  handleNameChange;
-  handleEmailChange;
-  handleClick;
-  validateEmail;
+  handleNameChange: (e: any) => void;
+  handleEmailChange: (e: any) => void;
+  handleClick: () => void;
+  validateEmail: boolean;
   name: string;
   email: string;
   id: string;
-  handleClickUpdate;
+  handleClickUpdate: () => void;
 }
 const useStyles = makeStyles({
   root: {
