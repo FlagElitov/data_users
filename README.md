@@ -3,7 +3,7 @@ Add , update, delete user data
 
 ### 'yarn / npm install'"
 
-### 'cd client'
+### 'cd application'
 
 ### 'yarn / npm install'
 
